@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Rows with Same Functionality</title>
+</head>
+
+<body>
+
+    <style>
+       /* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    overflow: hidden;
+} */
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#loader-container {
+    text-align: center;
+}
+
+#loader-text {
+    color: white;
+    font-size: 3rem;
+    font-family: Arial, sans-serif;
+    display: flex;
+    gap: 0.2rem;
+    justify-content: center;
+}
+
+#loader-text span {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fade-in 0.5s ease forwards;
+}
+
+#loader-text span:nth-child(1) { animation-delay: 0.1s; }
+#loader-text span:nth-child(2) { animation-delay: 0.3s; }
+#loader-text span:nth-child(3) { animation-delay: 0.5s; }
+#loader-text span:nth-child(4) { animation-delay: 0.7s; }
+#loader-text span:nth-child(5) { animation-delay: 0.9s; }
+
+@keyframes fade-in {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#fade-text {
+    color: white;
+    opacity: 0;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    animation: text-fade 2s ease 1.5s forwards;
+}
+
+@keyframes text-fade {
+    to {
+        opacity: 1;
+    }
+}
+
+#loader-text.move-up {
+    animation: move-up 1s ease forwards;
+    letter-spacing: 0.2rem; /* Initial letter spacing */
+}
+
+@keyframes move-up {
+    to {
+        transform: translateY(-100vh);
+        letter-spacing: 30rem; /* Increasing the gap between the letters */
+    }
+}
+
+#content {
+    display: none;
+    height: 100%;
+}
+
+    </style>
+
+
+
+
+<div id="preloader">
+    <div id="loader-container">
+        <h1 id="loader-text">
+            <span>A</span><span>R</span><span>D</span><span>O</span><span>R</span>
+        </h1>
+        <p id="fade-text">Design Dimension</p>
+    </div>
+</div>
+
+
+    <script>
+       window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    const content = document.getElementById('content');
+    const loaderText = document.getElementById('loader-text');
+
+    // First, show letters one by one
+    setTimeout(() => {
+        loaderText.classList.add('move-up'); // Move text upwards and increase letter spacing
+    }, 2000); // Delay before text moves up
+
+    // Hide preloader and show content after animation completes
+    setTimeout(() => {
+        preloader.style.display = 'none';
+        content.style.display = 'block';
+        document.body.style.overflow = 'auto'; // Allow scrolling once the website is visible
+    }, 3000); // 3 seconds total delay for preloader
+});
+    </script>
+
+
+    <style>
+        .lpbody {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            user-select: none;
+        }
+
+        .lprow-container {
+            margin-top: 50px;
+            margin-bottom: -150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 1.5s ease;
+        }
+
+        .lpswiper-container {
+            display: flex;
+            overflow: hidden;
+            width: 95%;
+            position: relative;
+            height: 60vh;
+            transition: all 1.5s ease;
+        }
+
+        .lpswiper-wrapper {
+            display: flex;
+            transition: transform 1.5s ease;
+        }
+
+        .lpswiper-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            padding: 10px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .lpheading {
+            font-size: 20px;
+            transition: transform 1.5s ease;
+            margin-right: 55px;
+        }
+
+        .lpimage {
+            width: 380px;
+            transition: transform 1.5s ease;
+            cursor: pointer;
+        }
+
+        .lpimage.enlarged {
+            transform: scale(1.6);
+        }
+
+        .lpheading.enlarged {
+            transform: scale(1.2);
+            margin-right: 128px;
+        }
+
+        .lpabout-image {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 1.5s ease, opacity 1.5s ease;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        .lpabout-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .extra-images {
+            display: flex;
+            gap: 60px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 1.5s ease, opacity 1.5s ease;
+        }
+
+        .extra-images img {
+            width: 420px;
+            height: 420px;
+            object-fit: cover;
+        }
+
+        .extra-images.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Invisible button areas */
+        .left-zone,
+        .right-zone {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 12%;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .left-zone {
+            left: 0;
+            cursor: url('./img/icons8-left-arrow-new.png'), auto;
+        }
+
+        .right-zone {
+            right: 0;
+            cursor: url('./img/icons8-right-arrow-new.png'), auto;
+        }
+
+        .left-zone,
+        .right-zone {
+            background: transparent;
+        }
+
+        .no-select .lpimage {
+            pointer-events: none;
+        }
+
+        .no-select {
+            cursor: grabbing !important;
+        }
+
+        /* Responsive Styling */
+        @media screen and (max-width: 1200px) {}
+
+        @media screen and (max-width: 1350px) {
+            .lpabout-image {
+                display: none;
+            }
+
+            .main-swiper-section {
+                padding-left: 200px;
+            }
+
+            .lpimage.enlarged {
+                margin-top: 50px;
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .main-swiper-section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .extra-images {
+
+                padding-top: 200px;
+                height: 10vh;
+            }
+
+            .lpabout-image {
+                display: none;
+            }
+
+            .lpheading {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .lpswiper-wrapper {
+                flex-direction: column;
+            }
+
+            .lpimage {
+                width: 260px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .lpimage {
+                width: 220px;
+            }
+
+            .lpheading {
+                text-align: center;
+                font-size: 18px;
+                margin-right: 0;
+            }
+
+            .lprow-container {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .main-swiper-section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .lpimage {
+                width: 180px;
+            }
+
+            .lpheading {
+                font-size: 16px;
+            }
+
+            .lpheading.enlarged {
+                margin-bottom: 50px;
+            }
+
+            .lprow-container {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <div class="lpbody" id="content">
+        <!-- Row 1 -->
+        <div class="lprow-container">
+            <div class="lpswiper-container">
+                <div class="lpswiper-wrapper">
+                    <!-- Main Image and Heading -->
+                    <div class="lpswiper-item main-swiper-section" style="margin-left:-250px ;">
+                        <h1 class="lpheading">Heading 1</h1>
+                        <img class="lpimage" src="./img/fullscreen-slider/1.jpg" alt="Main Image">
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="lpswiper-item" style="margin-left:-170px ; display: flex; justify-content: left;">
+                        <p class="lpabout-image lpabout-section-responsive">This is an additional description about the
+                            image in Row 1. Lorem ipsum...
+                        </p>
+                    </div>
+
+                    <!-- Extra Images -->
+                    <div class="lpswiper-item extra-images"
+                        style="display: flex; flex-direction: row; margin-left:-910px ; justify-content: left;">
+                        <img src="img/fullscreen-slider/slider-01.jpg" alt="Extra Image 1">
+                        <img src="img/fullscreen-slider/slider-02.jpg" alt="Extra Image 2">
+                        <img src="img/fullscreen-slider/slider-03.jpg" alt="Extra Image 3">
+                        <img src="img/fullscreen-slider/slider-04.jpg" alt="Extra Image 4">
+                    </div>
+                </div>
+                <div class="left-zone"></div>
+                <div class="right-zone"></div>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="lprow-container">
+            <div class="lpswiper-container">
+                <div class="lpswiper-wrapper">
+                    <!-- Main Image and Heading -->
+                    <div class="lpswiper-item main-swiper-section" style="margin-left:-250px ;">
+                        <h1 class="lpheading">Heading 2</h1>
+                        <img class="lpimage" src="./img/fullscreen-slider/1.jpg" alt="Main Image">
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="lpswiper-item" style="margin-left:-170px ; display: flex; justify-content: left;">
+                        <p class="lpabout-image">This is an additional description about the image in Row 2. Lorem
+                            ipsum...
+                        </p>
+                    </div>
+
+                    <!-- Extra Images -->
+                    <div class="lpswiper-item extra-images"
+                        style="display: flex; flex-direction: row; margin-left:-910px ; justify-content: left;">
+                        <img src="img/fullscreen-slider/slider-05.jpg" alt="Extra Image 1">
+                        <img src="img/fullscreen-slider/slider-06.jpg" alt="Extra Image 2">
+                        <img src="img/fullscreen-slider/slider-07.jpg" alt="Extra Image 3">
+                        <img src="img/fullscreen-slider/slider-03.jpg" alt="Extra Image 4">
+                    </div>
+                </div>
+                <div class="left-zone"></div>
+                <div class="right-zone"></div>
+            </div>
+        </div>
+
+        <div class="lprow-container">
+            <div class="lpswiper-container">
+                <div class="lpswiper-wrapper">
+                    <!-- Main Image and Heading -->
+                    <div class="lpswiper-item main-swiper-section" style="margin-left:-250px ;">
+                        <h1 class="lpheading">Heading 2</h1>
+                        <img class="lpimage" src="./img/fullscreen-slider/1.jpg" alt="Main Image">
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="lpswiper-item" style="margin-left:-170px ; display: flex; justify-content: left;">
+                        <p class="lpabout-image">This is an additional description about the image in Row 2. Lorem
+                            ipsum...
+                        </p>
+                    </div>
+
+                    <!-- Extra Images -->
+                    <div class="lpswiper-item extra-images"
+                        style="display: flex; flex-direction: row; margin-left:-910px ; justify-content: left;">
+                        <img src="img/fullscreen-slider/slider-05.jpg" alt="Extra Image 1">
+                        <img src="img/fullscreen-slider/slider-06.jpg" alt="Extra Image 2">
+                        <img src="img/fullscreen-slider/slider-07.jpg" alt="Extra Image 3">
+                        <img src="img/fullscreen-slider/slider-03.jpg" alt="Extra Image 4">
+                    </div>
+                </div>
+                <div class="left-zone"></div>
+                <div class="right-zone"></div>
+            </div>
+        </div>
+
+        <!-- You can add more rows similarly -->
+
+        <script>
+            // Function to handle click and swiper functionality for each row
+            document.querySelectorAll('.lprow-container').forEach((row) => {
+                const lpimage = row.querySelector('.lpimage');
+                const lpheading = row.querySelector('.lpheading');
+                const aboutImage = row.querySelector('.lpabout-image');
+                const extraImages = row.querySelector('.extra-images');
+                const swiperContainer = row.querySelector('.lpswiper-container');
+                const swiperWrapper = row.querySelector('.lpswiper-wrapper');
+                const leftZone = row.querySelector('.left-zone');
+                const rightZone = row.querySelector('.right-zone');
+                let isDragging = false;
+                let startPos = 0;
+                let currentTranslate = 0;
+                let prevTranslate = 0;
+
+                // Click event to enlarge image, heading and reveal hidden elements
+                lpimage.addEventListener('click', () => {
+                    lpimage.classList.toggle('enlarged');
+                    lpheading.classList.toggle('enlarged');
+                    aboutImage.classList.toggle('visible');
+                    extraImages.classList.toggle('visible');
+
+                    // Adjust other rows when the current row expands or collapses
+                    const isEnlarged = lpimage.classList.contains('enlarged');
+                    row.style.marginBottom = isEnlarged ? '00px' : '-150px'; // Create space below the enlarged image
+                });
+
+                // Move swiper left and right with click zones
+                function moveSwiper(direction) {
+                    const swipeAmount = 500;
+                    const maxTranslate = -(swiperWrapper.scrollWidth - swiperContainer.clientWidth);
+
+                    if (direction === 'left') {
+                        currentTranslate += swipeAmount;
+                        if (currentTranslate > 0) currentTranslate = 0;
+                    } else if (direction === 'right') {
+                        currentTranslate -= swipeAmount;
+                        if (currentTranslate < maxTranslate) currentTranslate = maxTranslate;
+                    }
+
+                    swiperWrapper.style.transform = `translateX(${currentTranslate}px)`;
+                }
+
+                // Left zone click to move swiper left
+                leftZone.addEventListener('click', () => moveSwiper('left'));
+
+                // Right zone click to move swiper right
+                rightZone.addEventListener('click', () => moveSwiper('right'));
+
+                // Drag and swipe functionality
+                swiperWrapper.addEventListener('mousedown', startDrag);
+                swiperWrapper.addEventListener('mouseup', endDrag);
+                swiperWrapper.addEventListener('mouseleave', endDrag);
+                swiperWrapper.addEventListener('mousemove', drag);
+
+                function startDrag(e) {
+                    if (!lpimage.classList.contains('enlarged')) return;
+
+                    isDragging = true;
+                    startPos = e.clientX;
+                    swiperWrapper.style.cursor = 'grabbing';
+                }
+
+                function endDrag() {
+                    if (!isDragging) return;
+
+                    isDragging = false;
+                    prevTranslate = currentTranslate;
+                    swiperWrapper.style.cursor = 'grab';
+                }
+
+                function drag(e) {
+                    if (!isDragging) return;
+
+                    const currentPos = e.clientX;
+                    const diff = currentPos - startPos;
+                    currentTranslate = prevTranslate + diff;
+                    swiperWrapper.style.transform = `translateX(${currentTranslate}px)`;
+                }
+            });
+        </script>
+    </div>
+</body>
+
+</html>

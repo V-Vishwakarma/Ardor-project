@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0 auto;
+            justify-content: center;
+            margin-top: 200px;
+        }
+
+        .heading {
+            transition: transform 0.9s ease, margin-right 0.9s ease;
+            font-size: 24px;
+        }
+
+        .image {
+            width: 380px;
+            transition: transform 0.9s ease;
+            cursor: pointer;
+        }
+
+        .image.enlarged {
+            transform: scale(2.0);
+        }
+
+        .heading.enlarged {
+            transform: scale(1.5);
+            margin-right: 270px;
+        }
+
+        .about-image {
+            opacity: 0;
+            transition: opacity 0.9s ease;
+            max-width: 200px; /* Control width of the about section */
+            margin-left: 200px; /* Add space between image and about */
+        }
+
+        .about-image.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">Your Heading</h1>
+        <img class="image" src="./img/fullscreen-slider/1.jpg" alt="Image" />
+        <p class="about-image">This is an additional description about the image. It will be visible when you click on the image.</p>
+    </div>
+
+    <script>
+        const image = document.querySelector('.image');
+        const heading = document.querySelector('.heading');
+        const aboutImage = document.querySelector('.about-image');
+
+        image.addEventListener('click', () => {
+            image.classList.toggle('enlarged');
+            heading.classList.toggle('enlarged');
+            aboutImage.classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

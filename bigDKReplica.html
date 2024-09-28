@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Image with Topics and Details</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        .topics-section,
+        .about-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateX(100%);
+            /* Hidden off the screen */
+            transition: all 0.6s ease;
+            /* Smooth transition */
+        }
+
+        .image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            width: 100%;
+            max-width: 300px;
+            transition: transform 0.5s ease;
+            /* Image enlarge/shrink animation */
+            cursor: pointer;
+        }
+
+        /* Make the left section slide in from the left */
+        .left-slide-in {
+            transform: translateX(-0.1%);
+            opacity: 1;
+            text-align: right;
+            /* Fade in */
+        }
+
+        /* Make the right section slide in from the right */
+        .right-slide-in {
+            transform: translateX(0);
+            opacity: 1;
+            /* Fade in */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Left section: Topics (Initially hidden) -->
+        <div class="topics-section hidden" id="topics">
+            <h2>Topics</h2>
+            <ul>
+                <li>Topic 1</li>
+                <li>Topic 2</li>
+                <li>Topic 3</li>
+            </ul>
+        </div>
+
+        <!-- Center section: Image -->
+        <div class="image-section">
+            <img src="https://via.placeholder.com/300" alt="Placeholder Image" id="main-image">
+        </div>
+
+        <!-- Right section: About the image (Initially hidden) -->
+        <div class="about-section hidden" id="about">
+            <h2>About Image</h2>
+            <p>This is a placeholder image with details about the image. The section appears when the image is clicked.
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+        // Get elements
+        const image = document.getElementById('main-image');
+        const topics = document.getElementById('topics');
+        const about = document.getElementById('about');
+
+        // Initialize state for image size toggle
+        let isImageEnlarged = false;
+
+        // Add click event on image
+        image.addEventListener('click', () => {
+            // Toggle visibility of topics (left) and about (right) section
+            topics.classList.toggle('left-slide-in');  // Slide in from the left
+            about.classList.toggle('right-slide-in');  // Slide in from the right
+
+            // Toggle image enlarge/shrink
+            if (isImageEnlarged) {
+                image.style.transform = 'scale(1)'; // Shrink to original size
+            } else {
+                image.style.transform = 'scale(1.3)'; // Enlarge image
+            }
+
+            // Update the state
+            isImageEnlarged = !isImageEnlarged;
+        });
+
+
+    </script>
+</body>
+
+</html>

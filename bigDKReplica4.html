@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Swiper Example</title>
+</head>
+
+<body>
+    <style>
+        .lpbody1 {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            background-color: #f0f0f0;
+            user-select: none;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .lpswiper-container {
+            display: flex;
+            overflow: hidden;
+            width: 95%;
+            height: 100vh;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .lpswiper-wrapper {
+            display: flex;
+            transition: transform 1.5s ease;
+        }
+
+        .swiper-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            padding: 10px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .lpheading {
+            font-size: 20px;
+            transition: transform 1.5s ease;
+            margin-right: 55px;
+        }
+
+        .lpimage {
+            width: 380px;
+            transition: transform 1.5s ease;
+            cursor: pointer;
+        }
+
+        .lpimage.enlarged {
+            transform: scale(1.6);
+        }
+
+        .lpheading.enlarged {
+            transform: scale(1.2);
+            margin-right: 128px;
+        }
+
+        .lpabout-image {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        .lpabout-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .extra-images {
+            display: flex;
+            gap: 60px;
+        }
+
+        .extra-images img {
+            width: 420px;
+            height: 420px;
+            object-fit: cover;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+
+        .extra-images.visible img {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Invisible button areas */
+        .left-zone,
+        .right-zone {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 12%;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .left-zone {
+            left: 0;
+            cursor: url('./img/icons8-arrow-left-64.png'), auto;
+        }
+
+        .right-zone {
+            right: 0;
+            cursor: url('./img/icons8-right-64.png'), auto;
+        }
+
+        /* Make sure they are invisible */
+        .left-zone,
+        .right-zone {
+            background: transparent;
+        }
+
+        .no-select .lpimage {
+            pointer-events: none;
+        }
+
+        .no-select {
+            cursor: grabbing !important;
+        }
+    </style>
+
+
+    <div class="lpbody1">
+        <div class="lpswiper-container">
+            <div class="lpswiper-wrapper">
+                <!-- Main Image and Heading -->
+                <div class="swiper-item" style="margin-left:-250px ;">
+                    <h1 class="lpheading">Your Heading</h1>
+                    <img class="lpimage" src="./img/fullscreen-slider/1.jpg" alt="Main Image">
+                </div>
+
+                <!-- About Section -->
+                <div class="swiper-item" style="margin-left:-170px ; display: flex; justify-content: left;">
+                    <p class="lpabout-image">This is an additional description about the image. Lorem ipsum dolor sit,
+                        amet
+                        consectetur adipisicing elit. Amet voluptas, quam fuga culpa deleniti cumque sequi, natus
+                        eveniet
+                        architecto asperiores autem ea perferendis dignissimos sit aliquid qui debitis ratione
+                        recusandae
+                        praesentium, enim commodi quisquam voluptatem ipsam. Ducimus veritatis cum repellendus! Magnam
+                        facere officia qui pariatur. Impedit aspernatur repudiandae vitae distinctio?</p>
+                </div>
+
+                <!-- Extra Images -->
+                <div class="swiper-item extra-images"
+                    style="display: flex; flex-direction: row; margin-left:-970px ; justify-content: left;">
+                    <img src="img/fullscreen-slider/slider-01.jpg" alt="Extra Image 1">
+                    <img src="img/fullscreen-slider/slider-02.jpg" alt="Extra Image 2">
+                    <img src="img/fullscreen-slider/slider-03.jpg" alt="Extra Image 3">
+                    <img src="img/fullscreen-slider/slider-04.jpg" alt="Extra Image 4">
+                </div>
+            </div>
+
+            <!-- Invisible Click Zones -->
+            <div class="left-zone"></div>
+            <div class="right-zone"></div>
+        </div>
+    </div>
+
+    <script>
+        const lpimage = document.querySelector('.lpimage');
+        const lpheading = document.querySelector('.lpheading');
+        const aboutImage = document.querySelector('.lpabout-image');
+        const extraImages = document.querySelector('.extra-images');
+        const swiperContainer = document.querySelector('.lpswiper-container');
+        const swiperWrapper = document.querySelector('.lpswiper-wrapper');
+        const leftZone = document.querySelector('.left-zone');
+        const rightZone = document.querySelector('.right-zone');
+
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+
+        // Click event to enlarge image, heading and reveal hidden elements
+        lpimage.addEventListener('click', () => {
+            lpimage.classList.toggle('enlarged');
+            lpheading.classList.toggle('enlarged');
+            aboutImage.classList.toggle('visible');
+            extraImages.classList.toggle('visible');
+        });
+
+        // Move swiper left and right with click zones
+        function moveSwiper(direction) {
+            const swipeAmount = 400; // Adjust this value for swipe distance
+            const maxTranslate = -(swiperWrapper.scrollWidth - swiperContainer.clientWidth);
+
+            if (direction === 'left') {
+                currentTranslate += swipeAmount;
+                if (currentTranslate > 0) currentTranslate = 0;
+            } else if (direction === 'right') {
+                currentTranslate -= swipeAmount;
+                if (currentTranslate < maxTranslate) currentTranslate = maxTranslate;
+            }
+
+            swiperWrapper.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        // Left zone click to move swiper left
+        leftZone.addEventListener('click', () => {
+            moveSwiper('left');
+        });
+
+        // Right zone click to move swiper right
+        rightZone.addEventListener('click', () => {
+            moveSwiper('right');
+        });
+
+        // Drag and swipe functionality
+        swiperWrapper.addEventListener('mousedown', startDrag);
+        swiperWrapper.addEventListener('mouseup', endDrag);
+        swiperWrapper.addEventListener('mouseleave', endDrag);
+        swiperWrapper.addEventListener('mousemove', drag);
+
+        function startDrag(e) {
+            if (!lpimage.classList.contains('enlarged')) return;
+
+            isDragging = true;
+            startPos = e.clientX;
+            swiperWrapper.style.cursor = 'grabbing';
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+
+            isDragging = false;
+            prevTranslate = currentTranslate;
+            swiperWrapper.style.cursor = 'grab';
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            if (!lpimage.classList.contains('enlarged')) return;
+
+            const currentPosition = e.clientX;
+            const movement = currentPosition - startPos;
+            currentTranslate = prevTranslate + movement;
+
+            const maxTranslate = -(swiperWrapper.scrollWidth - swiperContainer.clientWidth);
+            if (currentTranslate > 0) currentTranslate = 0;
+            if (currentTranslate < maxTranslate) currentTranslate = maxTranslate;
+
+            swiperWrapper.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        swiperWrapper.style.cursor = 'grab';
+    </script>
+</body>
+
+</html>

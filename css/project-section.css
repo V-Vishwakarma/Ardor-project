@@ -1,0 +1,15 @@
+.project-section {
+    margin-bottom: 30px;
+    padding: 0px 30px 15px 30px;
+
+}
+
+.project-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.project-section img {
+    cursor: pointer;
+    padding: 10px;
+}
